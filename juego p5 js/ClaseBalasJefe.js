@@ -1,209 +1,81 @@
-class BalaBossA{
-  constructor(x,y){
+// -----------------------------
+// Clase base para las balas del jefe
+class BalaJefe {
+  constructor(x, y, direccion, velocidad = 4) {
     this.x = x;
     this.y = y;
-    this.vel = 4;
-  }
-  moverA(){
-    this.y = this.y + 2 + this.vel;
-  }
-  dibujar(){
-    push();
-    translate(this.x,this.y);
-    rotate(this.y = this.y + 2);
-    scale(0.12);
-    translate(-this.x,-this.y);
-    image(Balajefe,this.x,this.y);
-    pop();
-    //--------------------
-    fill(0,140,200);
-    circle(this.x,this.y,15);
-    var aux = dibujo.cercaA(this.x,this.y);
-    let dista = dist(this.x,this.y,aux.x,aux.y);
-    if (dista<10){
-      var angu = angulo(aux.x,aux.y,this.x,this.y);
-      var entro = 10 - dista;
-      this.x = this.x + entro*cos(angu);
-      this.y = this.y + entro*sin(angu);
-      var indice = -1;
-      for(let i = 0; i < vbbA.length; i++){
-        var di = dist(this.x,this.y,vbbA[i].x,vbbA[i].y);
-        if (di < 10){ 
-          indice = i;
-        }
-      }
-      if (indice != -1){
-       vbbA.splice(indice,1);
-      }
-    }
-  }
-}
-class BalaBossB{
-  constructor(x,y){
-    this.x = x;
-    this.y = y;
-    this.vel = 4;
+    this.vel = velocidad;
+    this.direccion = direccion;
     this.angulo = angulo(this.x, this.y, personaje.x, personaje.y);
   }
-  moverB(){
-    this.y = this.y - 2 - this.vel;
-  }
-  dibujar(){
-    push();
-    translate(this.x,this.y);
-    rotate(this.y = this.y + 2);
-    scale(0.12);
-    translate(-this.x,-this.y);
-    image(Balajefe,this.x,this.y);
-    pop();
-    //--------------------
-    fill(0,140,200);
-    circle(this.x,this.y,15);
-    var aux = dibujo.cercaA(this.x,this.y);
-    let dista = dist(this.x,this.y,aux.x,aux.y);
-    if (dista<10){
-      var angu = angulo(aux.x,aux.y,this.x,this.y);
-      var entro = 10 - dista;
-      this.x = this.x + entro*cos(angu);
-      this.y = this.y + entro*sin(angu);
-      var indice = -1;
-      for(let i = 0; i < vbbB.length; i++){
-        var di = dist(this.x,this.y,vbbB[i].x,vbbB[i].y);
-        if (di < 10){ 
-          indice = i;
-        }
-      }
-      if (indice != -1){
-       vbbB.splice(indice,1);
-      }
+
+  // Movimiento según la dirección
+  mover() {
+    switch (this.direccion) {
+      case "abajo":
+        this.y += this.vel;
+        break;
+      case "arriba":
+        this.y -= this.vel;
+        break;
+      case "derecha":
+        this.x += this.vel;
+        break;
+      case "izquierda":
+        this.x -= this.vel;
+        break;
+      case "perseguidora":
+        this.x += this.vel * cos(this.angulo);
+        this.y += this.vel * sin(this.angulo);
+        break;
+    }
+
+    // Verificar si la bala colisiona con el mapa o está fuera del límite
+    if (this.verificarColision() || this.fueraDeLimites()) {
+      this.eliminar();
     }
   }
-}
-class BalaBossD{
-  constructor(x,y){
-    this.x = x;
-    this.y = y;
-    this.vel = 4;
-    this.angulo = angulo(this.x, this.y, personaje.x, personaje.y);
-  }
-  moverD(){
-    this.x = this.x + 2 + this.vel;
-  }
-  dibujar(){
+
+  // Dibujar la bala
+  dibujar() {
     push();
-    translate(this.x,this.y);
-    rotate(this.y = this.y + 2);
+    translate(this.x, this.y);
     scale(0.12);
-    translate(-this.x,-this.y);
-    image(Balajefe,this.x,this.y);
+    image(Balajefe, 0, 0);
     pop();
-    //--------------------
-    fill(0,140,200);
-    circle(this.x,this.y,15);
-    var aux = dibujo.cercaA(this.x,this.y);
-    let dista = dist(this.x,this.y,aux.x,aux.y);
-    if (dista<10){
-      var angu = angulo(aux.x,aux.y,this.x,this.y);
-      var entro = 10 - dista;
-      this.x = this.x + entro*cos(angu);
-      this.y = this.y + entro*sin(angu);
-      var indice = -1;
-      for(let i = 0; i < vbbD.length; i++){
-        var di = dist(this.x,this.y,vbbD[i].x,vbbD[i].y);
-        if (di < 10){ 
-          indice = i;
-        }
-      }
-      if (indice != -1){
-       vbbD.splice(indice,1);
-      }
-    }
   }
-}
-class BalaBossI{
-  constructor(x,y){
-    this.x = x;
-    this.y = y;
-    this.vel = 4;
-    this.angulo = angulo(this.x, this.y, personaje.x, personaje.y);
+
+  // Verifica colisión con el entorno
+  verificarColision() {
+    let aux = dibujo.cercaA(this.x, this.y);
+    return dist(this.x, this.y, aux.x, aux.y) < 10;
   }
-  moverI(){
-    this.x = this.x - 2 - this.vel;
+
+  // Verifica si la bala está fuera de los límites del mapa
+  fueraDeLimites() {
+    return this.x < 0 || this.x > width || this.y < 0 || this.y > height;
   }
-  dibujar(){
-    push();
-    translate(this.x,this.y);
-    rotate(this.y = this.y + 2);
-    scale(0.12);
-    translate(-this.x,-this.y);
-    image(Balajefe,this.x,this.y);
-    pop();
-    //--------------------
-    fill(0,140,200);
-    circle(this.x,this.y,15);
-    var aux = dibujo.cercaA(this.x,this.y);
-    let dista = dist(this.x,this.y,aux.x,aux.y);
-    if (dista<10){
-      var angu = angulo(aux.x,aux.y,this.x,this.y);
-      var entro = 10 - dista;
-      this.x = this.x + entro*cos(angu);
-      this.y = this.y + entro*sin(angu);
-      var indice = -1;
-      for(let i = 0; i < vbbI.length; i++){
-        var di = dist(this.x,this.y,vbbI[i].x,vbbI[i].y);
-        if (di < 10){ 
-          indice = i;
-        }
-      }
-      if (indice != -1){
-       vbbI.splice(indice,1);
-      }
-    }
+
+  // Eliminar la bala de su respectivo array
+  eliminar() {
+    let lista = this.direccion === "perseguidora" ? vbb : vbbA;
+    let index = lista.indexOf(this);
+    if (index !== -1) lista.splice(index, 1);
   }
 }
 
-class BalaBoss{
-  constructor(x,y){
-    this.x = x;
-    this.y = y;
-    this.vel = 10;
-    this.angulo = angulo(this.x, this.y, personaje.x, personaje.y);
+// -----------------------------
+// Bala especial del jefe (rápida y perseguidora)
+class BalaBossEspecial extends BalaJefe {
+  constructor(x, y) {
+    super(x, y, "perseguidora", 10);
   }
-  mover(){
-    this.x = this.x + this.vel * cos(this.angulo);
-    this.y = this.y + this.vel * sin(this.angulo);
-  }
-  dibujar(){
+
+  dibujar() {
     push();
-    translate(this.x,this.y);
-    rotate(this.y = this.y + 2);
+    translate(this.x, this.y);
     scale(0.12);
-    translate(-this.x,-this.y);
-    image(BulletBoss,this.x,this.y);
+    image(BulletBoss, 0, 0);
     pop();
-    //--------------------
-    fill(0,140,200);
-    circle(this.x,this.y,15);
-    //
-    var aux = dibujo.cercaA(this.x,this.y);
-    let dista = dist(this.x,this.y,aux.x,aux.y);
-    if (dista<10){
-      //print("colisiono!");
-      var angu = angulo(aux.x,aux.y,this.x,this.y);
-      //angu = angu + Math.PI;
-      var entro = 10 - dista;
-      this.x = this.x + entro*cos(angu);
-      this.y = this.y + entro*sin(angu);
-      var indice = -1;
-      for(let i = 0; i < vbb.length; i++){
-        var di = dist(this.x,this.y,vbb[i].x,vbb[i].y);
-        if (di < 10){ 
-          indice = i;
-        }
-      }
-      if (indice != -1){
-       vbb.splice(indice,1);
-      }
-    }
   }
 }

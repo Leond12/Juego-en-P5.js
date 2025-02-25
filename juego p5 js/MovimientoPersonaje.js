@@ -1,44 +1,49 @@
-//Teclas de movimiento
-function keyPressed(){
-   //print(keyCode);
-  if(keyCode == 87){
-    personaje.w = true;
-    Pers = 1;
+// -----------------------------
+// Manejo de teclas presionadas
+function keyPressed() {
+  switch (keyCode) {
+    case 87: // W - Arriba
+      personaje.direccion.w = true;
+      break;
+    case 68: // D - Derecha
+      personaje.direccion.d = true;
+      break;
+    case 65: // A - Izquierda
+      personaje.direccion.a = true;
+      break;
+    case 83: // S - Abajo
+      personaje.direccion.s = true;
+      break;
+    case 86: // V - Estado 3
+      dibujarEstado3();
+      break;
+    case 67: // C - Estado 4
+      dibujarEstado4();
+      break;
+    case 27: // ESC - Estado 5
+      dibujarEstado5();
+      break;
+    case 13: // ENTER - Estado 1
+      dibujarEstado1();
+      break;
   }
-  if(keyCode == 68){
-    personaje.d = true;
-    Pers = 2.2;
-  }
-  if(keyCode == 65){
-    personaje.a = true;
-    Pers = 3;
-  }
-  if(keyCode == 83){
-    personaje.s = true;
-    Pers = 4;
-  }
-  //------------------------------------
-  if (keyCode == 86){dibujarEstado3();}
-  if (keyCode == 67){dibujarEstado4();}
-  if (keyCode == 27){dibujarEstado5();}
-  if (keyCode == 13){dibujarEstado1();}
 }
-function keyReleased(){
-  if(keyCode == 87){
-    personaje.w = false;
-    Pers = 1;
-  }
-  if(keyCode == 68){
-    personaje.d = false;
-    Pers = 2.2;
-    PD = false;
-  }
-  if(keyCode == 65){
-    personaje.a = false;
-    Pers = 3;
-  }
-  if(keyCode == 83){
-    personaje.s = false;
-    Pers = 4;
+
+// -----------------------------
+// Manejo de teclas liberadas
+function keyReleased() {
+  switch (keyCode) {
+    case 87: // W - Arriba
+      personaje.direccion.w = false;
+      break;
+    case 68: // D - Derecha
+      personaje.direccion.d = false;
+      break;
+    case 65: // A - Izquierda
+      personaje.direccion.a = false;
+      break;
+    case 83: // S - Abajo
+      personaje.direccion.s = false;
+      break;
   }
 }

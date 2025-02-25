@@ -1,68 +1,67 @@
 //====================================
-class Dibujo{
-  constructor(){
-     this.lineas = []
-   }  
+// Clase que maneja el dibujo del mapa y las colisiones con líneas
+class Dibujo {
+  constructor() {
+    this.lineas = [];
+  }
+
   addLinea(lin) {
     this.lineas.push(lin);
   }
+
   dibujar() {
-    for (let aux of this.lineas) {
-      aux.dibujar();
-    }
+    this.lineas.forEach(linea => linea.dibujar());
   }
+
+  // Encuentra el punto más cercano en las líneas al punto dado
   cercaA(px, py) {
-    this.dmenor = 999999;
-    this.cx = 0;
-    this.cy = 0;
-    for (let lin of this.lineas) {
-      var aux = lin.lineaPuntoSegmento(new Punto(px, py));
-      var d = dist(aux.x, aux.y, px, py);
-      if (d < this.dmenor) {
-        this.dmenor = d;
-        this.cx = aux.x;
-        this.cy = aux.y;
+    let dMenor = Infinity;
+    let puntoCercano = new Punto(0, 0);
+
+    this.lineas.forEach(lin => {
+      let aux = lin.lineaPuntoSegmento(new Punto(px, py));
+      let d = dist(aux.x, aux.y, px, py);
+      if (d < dMenor) {
+        dMenor = d;
+        puntoCercano = aux;
       }
-    }
-    return new Punto(this.cx, this.cy);
+    });
+
+    return puntoCercano;
   }
 }
+
 //====================================
+// Clase para representar una línea en el mapa
 class Linea {
   constructor(pa, pb) {
     this.a = pa;
     this.b = pb;
   }
-  dibujar(){
-    line(this.a.x,this.a.y,this.b.x,this.b.y);
+
+  dibujar() {
+    line(this.a.x, this.a.y, this.b.x, this.b.y);
   }
+
+  // Encuentra el punto más cercano en la línea a un punto dado
   lineaPuntoSegmento(pto) {
-    this.A = pto.x - this.a.x;
-    this.B = pto.y - this.a.y;
-    this.C = this.b.x - this.a.x;
-    this.D = this.b.y - this.a.y;
+    let A = pto.x - this.a.x;
+    let B = pto.y - this.a.y;
+    let C = this.b.x - this.a.x;
+    let D = this.b.y - this.a.y;
 
-    this.dot = this.A * this.C + this.B * this.D;
-    this.len_sq = this.C * this.C + this.D * this.D;
-    this.param = this.dot / this.len_sq;
+    let dot = A * C + B * D;
+    let len_sq = C * C + D * D;
+    let param = dot / len_sq;
 
-    this.nx = 0;
-    this.ny = 0;
-
-    if (this.param < 0) {
-      this.nx = this.a.x;
-      this.ny = this.a.y;
-    } else if (this.param > 1) {
-      this.nx = this.b.x;
-      this.ny = this.b.y;
-    } else {
-      this.nx = this.a.x + this.param * this.C;
-      this.ny = this.a.y + this.param * this.D;
-    }
-    return new Punto(this.nx, this.ny);
+    if (param < 0) return new Punto(this.a.x, this.a.y);
+    if (param > 1) return new Punto(this.b.x, this.b.y);
+    return new Punto(this.a.x + param * C, this.a.y + param * D);
   }
 }
+
 //====================================
+// Clase para representar un punto en el mapa
 class Punto {
   constructor(px, py) {
     this.x = px;

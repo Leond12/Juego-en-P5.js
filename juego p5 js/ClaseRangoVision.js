@@ -1,34 +1,23 @@
-class RVision{
-  constructor(){
-    //circle(330,100,470);
-    this.x = 330;
-    this.y = 100;
-    //
-    this.a = 1150;
-    this.b = 125;
-    //
-    this.r = 320;
-    this.v = 620;
-    //
-    this.o = 1000;
-    this.p = 620;
-    //
-    this.s = 300;
-    this.t = 1150;
-    //
-    this.m = 1260;
-    this.n = 970;
+// -----------------------------
+// Clase para el rango de visión de los enemigos
+class RVision {
+  constructor() {
+    this.puntosVision = [
+      { x: 330, y: 100, radio: 470 },
+      { x: 1150, y: 125, radio: 550 },
+      { x: 320, y: 620, radio: 440 },
+      { x: 1000, y: 620, radio: 440 },
+      { x: 300, y: 1150, radio: 600 },
+      { x: 1260, y: 970, radio: 440 }
+    ];
   }
-  dibujar(){
-    fill(50,200,160);
-    //square(this.x,this.y,510);
-    //circle(this.x,this.y,470);
-    //circle(this.a,this.b,550);
-    //circle(this.r,this.v,440);
-    //circle(this.o,this.p,440);
-    //circle(this.s,this.t,600);
-    //circle(this.m,this.n,440);
-    //rect(this.a, this.b, this.c, this.d);
+
+  // Dibujar todas las áreas de visión
+  dibujar() {
+    fill(50, 200, 160);
+    this.puntosVision.forEach(punto => {
+      circle(punto.x, punto.y, punto.radio);
+    });
     fill(0);
   }
 }

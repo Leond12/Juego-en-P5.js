@@ -1,22 +1,29 @@
-function VidaPJ(){
-  if (lifeP <= 0){
-    fill(0);
-    textSize(20);
-    text("Sin vida",300,430);
-    text(lifeP,450,430);
-    estado =3;
+// -----------------------------
+// Verificar si el personaje ha perdido toda su vida
+function verificarVidaPersonaje() {
+  if (lifeP <= 0) {
+    lifeP = 0; // Evita valores negativos
+    estado = 3; // Cambia a estado de Game Over
     ctd = 200;
-    lifeP = 100;
+    lifeP = 100; // Restablece vida para nueva partida
     personaje.x = 350;
     personaje.y = 470;
-    ele2 = createAudio('gameover.mp4');
-    ele2.autoplay(true);
+
+    // Reproducir sonido de Game Over una sola vez
+    if (!ele2) {
+      ele2 = createAudio('gameover.mp4');
+      ele2.autoplay(true);
+    }
+
     ele.autoplay(false);
-  } else {
-      fill(0);
-      textSize(20);
-      text("Con vida",300,430);
-      text(lifeP,450,430);
-      ele.autoplay(true);
   }
+}
+
+// -----------------------------
+// Mostrar la barra de vida del personaje
+function mostrarVidaPersonaje() {
+  fill(0);
+  textSize(20);
+  textStyle(BOLD);
+  text(`Vida: ${lifeP}`, personaje.x - 25, personaje.y + 65);
 }

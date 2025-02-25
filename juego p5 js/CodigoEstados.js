@@ -1,177 +1,115 @@
-function dibujarEstado0(){
-    background(0);
-    push();
-    translate(x,y);
-    rotate(0);
-    esc = esc - (100-1.3)/150;
-    if(esc <1.3){esc = 1.3;}
-    scale(esc);
-    translate(-x,-y);
-    image(inicio,x,y);
-    pop();  
-    ctd2--;
-    if (ctd2 <= 0){
-      estado = 1;
-      ele = createAudio('inicio.mpeg');
-      ele.autoplay(true);
-    }
-}
-//-----------------------------
-function dibujarEstado11(){
-    background(0);
-    push();
-    translate(x,y);
-    rotate(0);
-    esc = esc - (100-0.9)/150;
-    if(esc <0.9){esc = 0.9;}
-    scale(esc);
-    translate(-x,-y);
-    image(credito,750,y);
-    pop(); 
+// -----------------------------
+// Función genérica para dibujar estados con fondo e imágenes
+function dibujarEstadoFondo(imagen, escala, tiempoVariable, siguienteEstado) {
+  background(0);
+  push();
+  translate(x, y);
+  scale(escala);
+  image(imagen, 0, 0);
+  pop();
+
+  // Reducir el temporizador correcto
+  if (siguienteEstado === 2) {
+    ctd--;
+    console.log("ctd actual:", ctd);
+  } else if (siguienteEstado === 0) {
     ctd3--;
-    if (ctd3 <= 0){
-      estado = 0;
-    }
+    console.log("ctd3 actual:", ctd3);
+  }
+
+  // Cambiar estado si el tiempo llegó a 0
+  if ((siguienteEstado === 2 && ctd <= 0) || (siguienteEstado === 0 && ctd3 <= 0)) {
+    console.log("Cambiando estado a:", siguienteEstado);
+    estado = siguienteEstado;
+  }
 }
-//-----------------------------
-function dibujarEstado1(){
-   push();
-   translate(x,y);
-   rotate(0);
-   esc = esc - (100-1.3)/150;
-   if(esc <1.3){esc = 1.3;}
-   scale(esc);
-   translate(-x,-y);
-   image(portada,500,y);
-   pop();  
-   ctd--;
-   if (ctd <= 0){
+
+// -----------------------------
+// Estados del juego
+
+function dibujarEstado0() {
+  console.log("Dibujando estado 0, ctd2:", ctd2);
+
+  background(0);
+  push();
+  translate(x, y);
+  scale(1.3);
+  image(inicio, 0, 0);
+  pop();
+
+  ctd2--;
+  
+  if (ctd2 <= 0) {
+    console.log("Cambiando a estado 1");
+    estado = 1;
+    ele = createAudio('inicio.mpeg');
+    ele.autoplay(true);
+  }
+}
+
+function dibujarEstado11() {
+  dibujarEstadoFondo(credito, 0.9, ctd3, 0);
+}
+
+function dibujarEstado1() {
+  console.log("Dibujando estado 1, ctd:", ctd);
+  dibujarEstadoFondo(portada, 1.3, ctd, 2);
+
+  if (estado === 2) {
+    console.log("Inicializando elementos en estado 2...");
+    
+    llenarvectorBoss(); // Asegurar que el jefe se genera antes del estado 2
+    console.log("✅ Jefe generado en estado 2:", boss); // Depuración
+    
     llenarMunicion();
-    llenarBotiquines()
-    llenarEnemigosA();
-    llenarEnemigosB();
-    llenarEnemigosC();
-    llenarEnemigosD();
-    llenarEnemigosE();
-    llenarEnemigosF();
-    llenarvectorBoss();
+    llenarBotiquines();
+    llenarEnemigos();
     llenarvectorRVision();
+
     ba = [];
-    //vbe = [];
-    vbe1 = [];
-    vbe2 = [];
-    vbe3 = [];
-    vbe4 = [];
-    vbbA = [];
-    vbbB = [];
-    vbbD = [];
-    vbbI = [];
+    vbe = [];
     vbb = [];
     vbeP = [];
-    estado = 2;
   }
 }
-//-----------------------------
-function dibujarEstado2(){
-    personaje.mover();
-    personaje.dibujar();
-  for (let aux of rvis){
-    aux.dibujar();
+
+function dibujarEstado2() {
+  personaje.mover();
+  personaje.dibujar();
+
+  // Dibujar y mover todos los objetos en el juego
+  [...rvis, ...ene, ...enedi, ...eneab, ...vboss, ...vbb, ...ba, ...vbeP, ...mu, ...bo].forEach(obj => {
+    obj.mover && obj.mover();
+    obj.dibujar && obj.dibujar();
+  });
+
+  // Verificar que `vbe` existe antes de usarlo
+  if (typeof vbe !== "undefined" && Array.isArray(vbe)) {
+    vbe.forEach(bala => {
+      bala.mover();
+      bala.dibujar();
+    });
+  } else {
+    console.warn("⚠️ Advertencia: `vbe` no está definido. Asegúrate de que fue declarado en `setup()`.");
   }
-  for (let aux of ene){
-    //aux.mover();
-    aux.dibujar();
-  }
-  for (let aux of enedi){
-    aux.moverB1();
-    aux.moverB2();
-    aux.moverC2();
-    aux.dibujar();
-  }
-  for (let aux of eneab){
-    aux.moverC1();
-    aux.dibujar();
-  }
-  for (let aux of vboss){
-    aux.dibujar();
-  }
-  for (let aux of vbb){
-    aux.mover();
-    aux.dibujar();
-  }
-  for (let aux of vbbA){
-    //aux.mover1();
-    aux.moverA();
-    aux.dibujar();
-  }
-  for (let aux of vbbB){
-    //aux.mover1();
-    aux.moverB();
-    aux.dibujar();
-  }
-  for (let aux of vbbD){
-    //aux.mover1();
-    aux.moverD();
-    aux.dibujar();
-  }
-  for (let aux of vbbI){
-    //aux.mover1();
-    aux.moverI();
-    aux.dibujar();
-  }
-  for (let aux of ba){
-    aux.mover();
-    aux.dibujar();
-  }
-  for (let aux of vbe1){
-    //aux.mover1();
-    aux.moverA();
-    aux.dibujar();
-  }
-  for (let aux of vbe2){
-    //aux.mover1();
-    aux.moverB();
-    aux.dibujar();
-  }
-  for (let aux of vbe3){
-    //aux.mover1();
-    aux.moverD();
-    aux.dibujar();
-  }
-  for (let aux of vbe4){
-    //aux.mover1();
-    aux.moverI();
-    aux.dibujar();
-  }
-  for (let aux of vbeP){
-    aux.mover1();
-    aux.dibujar();
-  }
-  for (let aux of mu) {
-    aux.mostrar();
-  }
-  for (let aux of bo) {
-    aux.mostrar();
-  }
+
+  // Actualizar jefe (movimiento y ataques)
+  actualizarJefe();
+
+  // Interfaz y lógica de colisión
   CargadorPJ();
-  VidaPj();
+  mostrarVidaPersonaje(); // Mostrar vida del personaje en pantalla
   VidaBoss();
-  colisionBalaEnemigo1();
-  colisionBalaEnemigo2();
-  colisionBalaEnemigo3();
-  colisionBalaPersonaje1();
-  colisionBalaPersonaje2();
-  colisionBalaPersonaje3();
-  colisionBalaPersonaje4();
-  colisionBalaPersonaje5();
-  colisionBalaPersonajeBA();
-  colisionBalaPersonajeBB();
-  colisionBalaPersonajeBD();
-  colisionBalaPersonajeBI();
-  colisionBalaPersonajeBE();
+  
+  colisionBalaEnemigos("estatico");
+  colisionBalaEnemigos("movil");
+  colisionBalaEnemigos("otro");
   colisionBalaJefe();
-  if (vboss.length == 0 && ene.length == 0){
-    estado =4;
+
+  // Verificar si se ha ganado el juego
+  if (vboss.length === 0 && ene.length === 0) {
+    console.log("Juego ganado, cambiando a estado 4");
+    estado = 4;
     ammu = false;
     ctd = 200;
     cgd = 0;
@@ -180,81 +118,41 @@ function dibujarEstado2(){
     lifeB = 5000;
   }
 }
-//-----------------------------
-function dibujarEstado3(){
-  if (noLoop){
-    personaje.mover();
-    personaje.dibujar();
-  }
+
+
+function dibujarEstado3() {
+  personaje.mover();
+  personaje.dibujar();
   textStyle(BOLD);
   textSize(25);
-  fill(255,0,0);
-  text("Presione C para continuar",personaje.x - 100,personaje.y + 10);
-  noLoop(); 
+  fill(255, 0, 0);
+  text("Presione C para continuar", personaje.x - 100, personaje.y + 10);
+  noLoop();
 }
-//-----------------------------
-function dibujarEstado4(){
+
+function dibujarEstado4() {
   loop();
 }
-//-----------------------------
-function dibujarEstado5(){
-      estado =1;
-      ctd = 200;
-      lifeP = 100;
+
+function dibujarEstado5() {
+  estado = 1;
+  ctd = 200;
+  lifeP = 100;
   personaje.x = 60;
-  personaje.y = 365;   
+  personaje.y = 365;
 }
-//-----------------------------
-function dibujarEstado6(){
-  let ele;
-  imageMode(CENTER);
-  push();
-  translate(x,y);
-  rotate(0);
-  esc = esc - (130-1)/120;
-  if(esc <1){esc = 1;}
-    scale(esc);
-    translate(-x,-y);
-    image(fin,765,750);
-    pop(); 
+
+function dibujarEstado6() {
+  dibujarEstadoFondo(fin, 1, null);
 }
-//-----------------------------
-function VidaPj(){
-  if (lifeP <= 0){
-    fill(0);
-    textSize(20);
-    textStyle(BOLD);
-    text("Vida",personaje.x - 25,personaje.y + 65);
-    text(lifeP,personaje.x + 25,personaje.y + 65);
-    estado = 3;
-    ctd = 200;
-    lifeP = 100;
-    personaje.x = 60;
-    personaje.y = 365;
-    ele2 = createAudio('gameover.mp4');
-    ele2.autoplay(true);
-    ele.autoplay(false);
-  } else {
-      fill(0);
-      textSize(20);
-      textStyle(BOLD);
-      text("Vida",personaje.x - 25,personaje.y + 65);
-      text(lifeP,personaje.x + 25,personaje.y + 65);
-      ele.autoplay(true);
-  }
-}
-function VidaBoss(){
-  if (lifeB <= 0){
-    fill(0,0,130);
-    textSize(20);
-    textStyle(BOLD);
-    text("Crugger",boss.x- 100,boss.y + 120);
-    text(lifeB,boss.x + 50,boss.y + 120);
-  } else {
-      fill(0,0,130);
-      textSize(20);
-      textStyle(BOLD);
-      text("Crugger",boss.x- 100,boss.y + 120);
-      text(lifeB,boss.x + 50,boss.y + 120);
-  }
+
+// -----------------------------
+// Funciones de Vida
+
+function VidaBoss() {
+  fill(0, 0, 130);
+  textSize(20);
+  textStyle(BOLD);
+  text("Crugger", boss.x - 100, boss.y + 120);
+  text(lifeB, boss.x + 50, boss.y + 120);
 }

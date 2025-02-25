@@ -1,208 +1,82 @@
-//Vectores
+// -----------------------------
+// Vectores y Estados
 var exist = true;
-var ba = [];
-var mu = [];
-var bo = [];
-var vbe1 = [];
-var vbe2 = [];
-var vbe3 = [];
-var vbe4 = [];
-var vbeP = [];
-var vboss = [];
-//Balas del Boss
-var vbb = [];
-var vbbA = [];
-var vbbB = [];
-var vbbD = [];
-var vbbI = [];
-var rvis = [];
-//Vectores de los enemigos
-var ene = [];
-var enedi = [];
-var eneab = [];
-//Estados
+var ba = [], mu = [], bo = [], vbe1 = [], vbe2 = [], vbe3 = [], vbe4 = [], vbeP = [], vboss = [];
+var vbb = [], vbbA = [], vbbB = [], vbbD = [], vbbI = [], rvis = [];
+var ene = [], enedi = [], eneab = [];
 var estado = 0;
-var ctd = 200;//200
-var ctd2 = 400;//400
-var ctd3 = 100;
+var ctd = 200, ctd2 = 400, ctd3 = 100;
 var esc = 100;
-//Variables para el movimiento
-var ang = Math.PI/4;
-//Variables para el mapa
-var A,B;
-var dibujo;
-//Portada
-var x = 330;
-var y = 298;
-var xF = 765;
-var yF = 750;
-//municion
-var ammu = false;
-var cgd = 0;
-var x1 = 400;
-var y1 = 130;
-var x2 = 230;
-var y2 = 367;
-var x3 = 685;
-var y3 = 357;
-var x4 = 480;
-var y4 = 550;
-var x5 = 1200;
-var y5 = 175;
-var x6 = 1300;
-var y6 = 500;
-var x7 = 685;
-var y7 = 1100;
-var x8 = 935;
-var y8 = 1328;
-var x9 = 1346;
-var y9 = 1332;
-var x10 = 1350; //1300
-var y10 = 1120; //1200
-var x11 = 370;
-var y11 = 1000;
-var x12 = 120;
-var y12 = 1200;
-var x13 = 370;
-var y13 = 1405;
-//enemigos cuarto A
-var xE1 = 328;//enemigo del medio
-var yE1 = 177;
-var xE2 = 489;//enemigo inferior derecho
-var yE2 = 270;
-var xE3 = 165;//enemigo superior izquierdo 
-var yE3 = 105;
-var xE4 = 153;//enemigo inferior izquierdo
-var yE4 = 257;
-var xE5 = 498;//enemigo superior derecho
-var yE5 = 103;
-//enemigos cuarto B
-var xE6 = 916;//enemigo superior izquierdo
-var yE6 = 126;
-var xE7 = 1316;//enemigo superior derecho
-var yE7 = 127;
-var xE8 = 1110;//enemigo del medio
-var yE8 = 230;
-var xE9 = 1330;//enemigo inferior derecho
-var yE9 = 327;
-var xE10 = 800;//enemigo con movimiento superior
-var yE10 = 180;
-var xE11 = 935;//enemigo con movimiento inferior
-var yE11 = 290;
-//enemigos cuarto C
-var xE12 = 131;//enemigo superior izquierdo
-var yE12 = 469;
-var xE13 = 302;//enemigo del medio
-var yE13 = 466;
-var xE14 = 486;//enemigo superior derecho
-var yE14 = 465;
-var xE15 = 223;//enemigo inferior izquierdo
-var yE15 = 535;
-var xE16 = 400;//enemigo inferior derecho
-var yE16 = 535;
-//enemigos cuarto D
-var xE17 = 842;//enemigo inferior izquierdo
-var yE17 = 556;
-var xE18 = 916;//enemigo superior derecho
-var yE18 = 504;
-var xE19 = 980;//enemigo con movimiento vertical izquierdo
-var yE19 = 480;
-var xE20 = 1350;//enemigo con movimiento vertical derecho
-var yE20 = 480;
-var xE21 = 430;//enemigo con movimiento horizontal
-var yE21 = 535;
-//enemigos cuarto E
-var xE22 = 205;//enemigo superior izquierdo
-var yE22 = 1053;
-var xE23 = 187;//enemigo del medio izquierdo
-var yE23 = 1213;
-var xE24 = 192;//enemigo inferior izquierdo
-var yE24 = 1372;
-var xE25 = 514;//enemigo superior derecho
-var yE25 = 1106;
-var xE26 = 511;//enemigo inferior izquierdo
-var yE26 = 1271;
-//enemigos cuarto F
-var xE27 = 1127;//enemigo inferior izquierdo
-var yE27 = 1121;
-var xE28 = 1145;//enemigo superior derecho
-var yE28 = 922;
-var xE29 = 1328;
-var yE29 = 953;
+
+// Variables de Movimiento y Mapa
+var ang = Math.PI / 4;
+var A, B, dibujo;
+var x = 330, y = 298, xF = 765, yF = 750;
+
+// -----------------------------
+// Datos de munición y botiquines
+var ammu = false, cgd = 0;
+var municiones = [
+  { x: 400, y: 130 }, { x: 230, y: 367 }, { x: 685, y: 357 }, { x: 480, y: 550 },
+  { x: 1200, y: 175 }, { x: 1300, y: 500 }, { x: 685, y: 1100 }, { x: 935, y: 1328 },
+  { x: 1346, y: 1332 }, { x: 1350, y: 1120 }, { x: 370, y: 1000 }, { x: 120, y: 1200 },
+  { x: 370, y: 1405 }
+];
+
+var botiquines = [
+  { x: 705, y: 70 }, { x: 700, y: 500 }, { x: 100, y: 550 },
+  { x: 695, y: 1390 }, { x: 1150, y: 1330 }, { x: 550, y: 1390 }
+];
+
+// -----------------------------
+// Enemigos organizados en una lista de objetos
+var enemigos = [
+  // Cuarto A
+  { x: 328, y: 177, cuarto: "A" }, { x: 489, y: 270, cuarto: "A" },
+  { x: 165, y: 105, cuarto: "A" }, { x: 153, y: 257, cuarto: "A" },
+  { x: 498, y: 103, cuarto: "A" },
+
+  // Cuarto B
+  { x: 916, y: 126, cuarto: "B" }, { x: 1316, y: 127, cuarto: "B" },
+  { x: 1110, y: 230, cuarto: "B" }, { x: 1330, y: 327, cuarto: "B" },
+  { x: 800, y: 180, cuarto: "B" }, { x: 935, y: 290, cuarto: "B" },
+
+  // Cuarto C
+  { x: 131, y: 469, cuarto: "C" }, { x: 302, y: 466, cuarto: "C" },
+  { x: 486, y: 465, cuarto: "C" }, { x: 223, y: 535, cuarto: "C" },
+  { x: 400, y: 535, cuarto: "C" },
+
+  // Cuarto D
+  { x: 842, y: 556, cuarto: "D" }, { x: 916, y: 504, cuarto: "D" },
+  { x: 980, y: 480, cuarto: "D" }, { x: 1350, y: 480, cuarto: "D" },
+  { x: 430, y: 535, cuarto: "D" },
+
+  // Cuarto E
+  { x: 205, y: 1053, cuarto: "E" }, { x: 187, y: 1213, cuarto: "E" },
+  { x: 192, y: 1372, cuarto: "E" }, { x: 514, y: 1106, cuarto: "E" },
+  { x: 511, y: 1271, cuarto: "E" },
+
+  // Cuarto F
+  { x: 1127, y: 1121, cuarto: "F" }, { x: 1145, y: 922, cuarto: "F" },
+  { x: 1328, y: 953, cuarto: "F" }
+];
+
 var exist = true;
-//Salud
-var lifeP = 100;
-var lifeE = 100;
-var lifeB = 1000; //250 aciertos para matar
-var Mercy = 50;
-var DamageP = 20;
-var DamageE = 20;
-//Botiquines
-var xB1 = 705;
-var yB1 = 70;
-var xB2 = 700;
-var yB2 = 500;
-var xB3 = 100;
-var yB3 = 550;
-var xB4 = 695;
-var yB4 = 1390;
-var xB5 = 1150;
-var yB5 = 1330;
-var xB6 = 550;
-var yB6 = 1390;
-//Perspectica del Personaje
-var Pers = 2.2;
-var vidapersonaje = false;
-//BalasMuerte
-var muerte0 = false;
-var muerte1 = false;
-var muerte2 = false;
-var muerte3 = false;
-var muerte4 = false;
-var muerte5 = false;
-var muerte6 = false;
-var muerte7 = false;
-var muerte8 = false;
-var muerte9 = false;
-var muerte10 = false;
-var muerte11 = false;
-var muerte12 = false;
-var muerte13 = false;
-var muerte14 = false;
-var muerte15 = false;
-var muerte16 = false;
-var muerte17 = false;
-var muerte18 = false;
-var muerte19 = false;
-var muerte20 = false;
-var muerte21 = false;
-var muerte22 = false;
-var muerte23 = false;
-var enem0 = 1;
-var enem1 = 1;
-var enem2 = 1;
-var enem3 = 1;
-var enem4 = 1;
-var enem5 = 1;
-var enem6 = 1;
-var enem7 = 1;
-var enem8 = 1;
-var enem9 = 1;
-var enem10 = 1;
-var enem11 = 1;
-var enem12 = 1;
-var enem13 = 1;
-var enem14 = 1;
-var enem15 = 1;
-var enem16 = 1;
-var enem17 = 1;
-var enem18 = 1;
-var enem19 = 1;
-var enem20 = 1;
-var enem21 = 1;
-var enem22 = 1;
-var enem23 = 1;
-function preload(){
+
+// -----------------------------
+// Salud y Daño
+var lifeP = 100, lifeE = 100, lifeB = 1000;
+var Mercy = 50, DamageP = 20, DamageE = 20;
+
+// -----------------------------
+// Variables para Balas y Enemigos Eliminados
+var Pers = 2.2, vidapersonaje = false;
+var muerte = Array(24).fill(false);
+var enem = Array(24).fill(1);
+
+// -----------------------------
+// Carga de imágenes
+function preload() {
   portada = loadImage("portada.original2.jpg");
   caracterA = loadImage("CaracterA.png");
   caracterB = loadImage("CaracterB.png");
@@ -213,7 +87,7 @@ function preload(){
   inicio = loadImage("logo1.1.png");
   credito = loadImage("creditos.jpg");
   menuplay = loadImage("menuiniciplay.jpeg");
-  continuar= loadImage("continuar1.jpeg");
+  continuar = loadImage("continuar1.jpeg");
   fondo = loadImage("MapaFinal.png");
   gun = loadImage("gun.png");
   bossF = loadImage("jefe3.png");
@@ -223,78 +97,80 @@ function preload(){
   balaPersonaje = loadImage("BalaPersonaje.png");
   balaEnemigo = loadImage("BalaEnemigo.png");
   azul = loadImage("bolazul.png");
-  Botiquin = loadImage("botiquin2.png");
+  botiquinImagen = loadImage("botiquin2.png");
   Balajefe = loadImage("bolajefe.png");
   BulletBoss = loadImage("bolajefe2.png");
   CaracterD1 = loadImage("CaracterD1.png");
   CaracterD2 = loadImage("CaracterD2.png");
 }
-//-----------------------------
-let slider;
-let ele;
-let ele2;
-//-----------------------------
+
+// -----------------------------
+let slider, ele, ele2;
+
+// -----------------------------
+// Bucle Principal
+// -----------------------------
+// Bucle Principal
 function draw() {
-  background(150,150,150);
+  background(150, 150, 150);
   dibujo.dibujar();
+
+  // Dibujar el fondo correctamente
   push();
-  translate(xF,yF);
-  rotate(0);
-  esc = esc - (100-1.0)/100;
-  if(esc <1.0){esc = 1.0;}
+  translate(xF, yF);
   scale(esc);
-  translate(-xF,-yF);
-  image(fondo,xF,yF);
+  image(fondo, 0, 0); // Cambio de xF, yF a (0, 0) para evitar desajustes
   pop();
+
   fill(255);
-  //----------------------
-  if (estado == 0){
-    dibujarEstado0();
-  }
-  if (estado == 1){
-    dibujarEstado1();
-  }
-  if (estado == 2){
-  var di = dist(vision.x,vision.y,personaje.x,personaje.y);
-    if (di <= 260 && di>=0){
-      llenarvectorBEA();
-    }
-    dibujarEstado2();
-  var dis = dist(vision.a,vision.b,personaje.x,personaje.y);
-    if (dis <= 380 && dis>=0){
-      llenarvectorBEB();
-    }
-  var dista = dist(vision.r,vision.v,personaje.x,personaje.y);
-    if (dista <= 320 && dista>=0){
-      llenarvectorBEC();
-    }
-  var distan = dist(vision.o,vision.p,personaje.x,personaje.y);
-    if (distan <= 300 && di>=0){
-      llenarvectorBED();
-    }
 
-  var distanc = dist(vision.s,vision.t,personaje.x,personaje.y);
-    if (distanc <= 380 && distanc>=0){
-      llenarvectorBEE();
-      llenarvectorBalaBoss();
-    }
+  console.log("Estado actual:", estado); // Depuración
 
-  var distanci = dist(vision.m,vision.n,personaje.x,personaje.y);
-    if (distanci <= 280 && distanci>=0){
-      llenarvectorBEF();
-    }
+  switch (estado) {
+    case 0: // Menú principal
+      console.log("Dibujando estado 0 (Portada)"); // Depuración
+      dibujarEstado0();
+      break;
+
+    case 1: // Carga del nivel
+      console.log("Dibujando estado 1 (Carga del nivel)"); // Depuración
+      dibujarEstado1();
+      break;
+
+    case 2: // Juego en marcha
+      console.log("Dibujando estado 2 (Juego en marcha)"); // Depuración
+      dibujarEstado2(); // Maneja actualización y dibujo de todos los objetos
+      verificarMunicion(); // Recolectar munición
+      verificarBotiquines(); // Recolectar botiquines
+      verificarVidaPersonaje(); // Verifica vida del personaje en tiempo real
+      colisionBalaEnemigos("estatico");
+      colisionBalaEnemigos("movil");
+      colisionBalaEnemigos("otro");
+      colisionBalaJefe();
+      colisionBalasFueraDeLimite(); // Elimina balas fuera del mapa
+      break;
+
+    case 3: // Game Over
+      console.log("Dibujando estado 3 (Game Over)"); // Depuración
+      dibujarEstado6();
+      break;
+
+    case 4: // Pantalla de créditos o victoria
+      console.log("Dibujando estado 4 (Créditos o victoria)"); // Depuración
+      dibujarEstado11();
+      break;
+  }
 }
-  //generar disparo
-    if (mouseIsPressed === true && frameCount % 10 == 0 && ammu === true && cgd > 0){  
-      if (mouseButton === LEFT){
-        ba.push(new Bala(personaje.x, personaje.y,10));
-        cgd--;
-      }
+
+// -----------------------------
+// Función para actualizar el juego
+function actualizarJuego() {
+  dibujarEstado2();
+
+  if (mouseIsPressed && frameCount % 10 === 0 && ammu && cgd > 0) {  
+    if (mouseButton === LEFT) {
+      ba.push(new Bala(personaje.x, personaje.y, 10));
+      cgd--;
     }
-  if(estado == 3){
-    dibujarEstado6();
-  }
-  if(estado == 4){
-    dibujarEstado11();
   }
 }

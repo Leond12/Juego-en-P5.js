@@ -1,72 +1,52 @@
-class EnemigoE{
-  constructor(x,y){
+// -----------------------------
+// Clase Base Enemigo
+class Enemigo {
+  constructor(x, y, imagen) {
     this.x = x;
     this.y = y;
+    this.imagen = imagen;
   }
-  dibujar(){
-    //-------------------
+
+  dibujar() {
     push();
-    translate(this.x,this.y);
-    //rotate(angulo(this.x,this.y,mouseX,mouseY)+PI/2);
+    translate(this.x, this.y);
     scale(0.2);
-    translate(-this.x,-this.y);
-    image(SkinEnemigoE,this.x,this.y);
+    image(this.imagen, 0, 0);
     pop();
-    //--------------------
-    //fill(0,0,255);
-    //circle(this.x,this.y,10);
-    fill(0);
-    //text(lifeE,this.x,this.y); 
   }
 }
-class EnemigoM{
-  constructor(x,y,der,izq,up,down,vel){
-    this.x = x;
-    this.y = y;
-    this.der = der;
-    this.izq = izq;
-    this.up = up;
-    this.down = down;
-    this.vel = 1.6;
-    this.angulo = angulo(this.x, this.y, personaje.x, personaje.y);
+
+// -----------------------------
+// Enemigo Estático (Hereda de Enemigo)
+class EnemigoE extends Enemigo {
+  constructor(x, y) {
+    super(x, y, SkinEnemigoE);
   }
-  moverB1(){ // movimiento de derecha a izquierda
-       if (this.der){this.x = this.x + 1 + this.vel;}
-       else{this.x = this.x - 1 - this.vel;}
-       if (this.x >= 1280){this.der = false;}
-       if (this.x <= 800){this.der = true;} 
+}
+
+// -----------------------------
+// Enemigo Móvil (Hereda de Enemigo)
+class EnemigoM extends Enemigo {
+  constructor(x, y, horizontal, limiteMin, limiteMax, velocidad = 1.6) {
+    super(x, y, SkinEnemigo);
+    this.horizontal = horizontal; // true: mueve en X, false: mueve en Y
+    this.limiteMin = limiteMin;
+    this.limiteMax = limiteMax;
+    this.direccion = true; // true: avanza, false: retrocede
+    this.velocidad = velocidad;
   }
-  moverB2(){ // movimiento de derecha a izquierda
-       if (this.der){this.x = this.x + 1 + this.vel;}
-       else{this.x = this.x - 1 - this.vel;}
-       if (this.x >= 1400){this.der = false;}
-       if (this.x <= 935){this.der = true;} 
-  }
-  moverC1(){ // movimiento de arriba a abajo
-      if (this.up){this.y = this.y + 1 + this.vel;}
-      else{this.y = this.y - 1 - this.vel;}
-      if (this.y >= 560){this.up = false;}
-      if (this.y <= 440){this.up = true;}
-  }
-  moverC2(){ // movimiento de derecha a izquierda
-       if (this.der){this.x = this.x - 1 + this.vel;}
-       else{this.x = this.x + 1 - this.vel;}
-       if (this.x >= 1530){this.der = false;}
-       if (this.x <= 1009){this.der = true;} 
-  }
-  dibujar(){
-    //-------------------
-    push();
-    translate(this.x,this.y);
-    //rotate(angulo(this.x,this.y,mouseX,mouseY)+PI/2);
-    scale(0.2);
-    translate(-this.x,-this.y);
-    image(SkinEnemigo,this.x,this.y);
-    pop();
-    //--------------------
-    //fill(0,0,255);
-    //circle(this.x,this.y,50);
-    fill(0);
-    //text(lifeE,this.x,this.y); 
+
+  mover() {
+    if (this.horizontal) {
+      this.x += this.direccion ? this.velocidad : -this.velocidad;
+      if (this.x >= this.limiteMax || this.x <= this.limiteMin) {
+        this.direccion = !this.direccion;
+      }
+    } else {
+      this.y += this.direccion ? this.velocidad : -this.velocidad;
+      if (this.y >= this.limiteMax || this.y <= this.limiteMin) {
+        this.direccion = !this.direccion;
+      }
+    }
   }
 }
